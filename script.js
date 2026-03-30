@@ -119,6 +119,10 @@ function init() {
 // CORE LOGIC API FETCH
 // ---------------------------------------------------------
 
+/**
+ * Handles the weather search using a city name.
+ * Uses Open-Meteo Geocoding to get latitude/longitude first.
+ */
 async function handleSearch() {
   const query = cityInput.value.trim();
   if (!query) {
