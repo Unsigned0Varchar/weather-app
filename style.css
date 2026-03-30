@@ -35,7 +35,7 @@
 }
 
 /* Dynamic Weather Backgrounds */
-/* Smooth transition applied in tailwind index.html for min-h-screen */
+/* Smooth transition applied via Tailwind class 'transition-colors duration-1000' in index.html for min-h-screen container */
 
 /* Default / Clear Day */
 .bg-clear-day {
