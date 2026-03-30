@@ -1,5 +1,3 @@
-/* Custom CSS for WeatherFlow App */
-
 /* Custom Scrollbar for horizontal scrolling and dropdowns */
 ::-webkit-scrollbar {
   width: 6px;
@@ -17,7 +15,6 @@
   background: rgba(255, 255, 255, 0.3); 
 }
 
-/* Hide scrollbar completely but allow scrolling */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -26,16 +23,12 @@
   scrollbar-width: none;
 }
 
-/* Glassmorphism specifically for dropdowns and panels */
 .bg-glass {
   background: rgba(20, 30, 50, 0.5);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
-
-/* Dynamic Weather Backgrounds */
-/* Smooth transition applied via Tailwind class 'transition-colors duration-1000' in index.html for min-h-screen container */
 
 /* Default / Clear Day */
 .bg-clear-day {

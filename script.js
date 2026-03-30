@@ -1,6 +1,4 @@
-// ---------------------------------------------------------
-// SELECTORS
-// ---------------------------------------------------------
+
 
 // Search Elements
 const cityInput = document.getElementById('city-input');
@@ -37,16 +35,11 @@ const currentLocationIcon = document.getElementById('current-location-icon');
 // Forecast
 const forecastContainer = document.getElementById('forecast-container');
 
-// ---------------------------------------------------------
-// STATE
-// ---------------------------------------------------------
-
 let currentTempC = 0;
 let isCelsius = true;
 let recentSearches = JSON.parse(localStorage.getItem('weatherFlowRecent')) || [];
 
 // WMO Weather Mapping to Descriptions and OpenWeather Icons
-// This maps standard WMO codes returned by Open-Meteo to our specific UI elements
 const WMO_MAP = {
   0:  { desc: "Clear sky", icon: "01d", bgClass: "bg-clear-day" },
   1:  { desc: "Mainly clear", icon: "02d", bgClass: "bg-clear-day" },
@@ -78,9 +71,7 @@ const WMO_MAP = {
   99: { desc: "Thunderstorm with heavy hail", icon: "11d", bgClass: "bg-stormy" },
 };
 
-// ---------------------------------------------------------
-// INITIALIZATION
-// ---------------------------------------------------------
+
 
 function init() {
   renderRecentSearches();
@@ -114,10 +105,6 @@ function init() {
     }
   });
 }
-
-// ---------------------------------------------------------
-// CORE LOGIC API FETCH
-// ---------------------------------------------------------
 
 /**
  * Handles the weather search using a city name.
@@ -221,9 +208,7 @@ async function fetchWeatherData(lat, lon, locationTitle) {
   }
 }
 
-// ---------------------------------------------------------
 // UI UPDATES
-// ---------------------------------------------------------
 
 function updateUI(data, locationTitle) {
     const current = data.current;
@@ -268,7 +253,6 @@ function updateUI(data, locationTitle) {
     
     // Open-Meteo daily returns arrays for each variable up to 7 days.
     // We only want index 1-5 (next 5 days) or 0-4 depending on preference. 
-    // Usually, extended is index 1 to 5
     for(let i = 1; i <= 5; i++) {
         if(!daily.time[i]) break; // Guard against missing data
         
@@ -340,10 +324,7 @@ function updateUnitUI() {
     }
 }
 
-// ---------------------------------------------------------
 // RECENT SEARCHES & LOCAL STORAGE
-// ---------------------------------------------------------
-
 function addToRecentSearches(city) {
     // Avoid exact duplicates
     recentSearches = recentSearches.filter(item => item.toLowerCase() !== city.toLowerCase());
@@ -383,10 +364,6 @@ function renderRecentSearches() {
         recentDropdown.appendChild(li);
     });
 }
-
-// ---------------------------------------------------------
-// HELPER FUNCTIONS
-// ---------------------------------------------------------
 
 function showError(msg) {
     errorText.textContent = msg;
