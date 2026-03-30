@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Forecast App</title>
+  <meta name="description" content="A beautiful and responsive weather forecast application.">
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            primary: '#3b82f6',
+            glass: 'rgba(255, 255, 255, 0.15)',
+            'glass-border': 'rgba(255, 255, 255, 0.3)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Phosphor Icons (for beautifully designed weather icons) -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="app-body" class="antialiased min-h-screen transition-colors duration-1000 bg-gradient-to-br from-blue-900 to-slate-900 text-white flex justify-center items-center py-8 px-4 sm:px-6 lg:px-8">
+
+  <!-- Main Container -->
+  <main class="w-full max-w-4xl bg-glass backdrop-blur-xl border border-glass-border rounded-3xl shadow-2xl p-6 md:p-10 flex flex-col gap-8 relative overflow-hidden">
+    
+    <!-- Extreme Weather Alert Banner (Hidden by default) -->
+    <div id="weather-alert" class="hidden absolute top-0 left-0 w-full bg-red-600/90 backdrop-blur-md text-white px-4 py-2 flex items-center justify-center gap-2 text-sm font-semibold z-50">
+      <i class="ph ph-warning-circle text-lg"></i>
+      <span id="alert-message">Extreme temperature alert!</span>
+      <button id="close-alert-btn" class="absolute right-4 hover:opacity-80 transition-opacity">
+        <i class="ph ph-x"></i>
+      </button>
+    </div>
+
+    <!-- Header & Search Section -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mt-4">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">
+          WeatherFlow
+        </h1>
+        <p class="text-slate-300 text-sm mt-1">Real-time forecasts and insights</p>
+      </div>
+
+      <!-- Search Box Area -->
+      <div class="w-full md:w-auto flex flex-col items-end gap-2 relative">
+        <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto relative">
+          
+          <div class="relative w-full sm:w-64 z-40">
+            <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+              <i class="ph ph-magnifying-glass text-slate-400 text-lg"></i>
+            </div>
+            <input 
+              type="text" 
+              id="city-input" 
+              placeholder="Search for a city..." 
+              class="w-full bg-slate-800/50 border border-slate-600 rounded-xl py-2.5 pl-10 pr-4 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+              autocomplete="off"
+            >
+            <!-- Dropdown for Recent Searches -->
+            <ul id="recent-dropdown" class="absolute w-full mt-2 bg-slate-800/95 backdrop-blur-md border border-slate-600 rounded-xl shadow-xl max-h-48 overflow-y-auto hidden z-50">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+          
+          <div class="flex gap-2 w-full sm:w-auto">
+            <button id="search-btn" class="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-5 rounded-xl transition-colors shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2">
+              Search
+            </button>
+            <button id="current-location-btn" class="w-full sm:w-auto bg-slate-700/60 hover:bg-slate-700 text-white border border-slate-600 font-medium py-2.5 px-4 rounded-xl transition-colors flex items-center justify-center gap-2 group" title="Use current location">
+              <i class="ph ph-crosshair text-xl group-hover:text-blue-400 transition-colors"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Error Message Container (Hidden by default) -->
+        <div id="error-message" class="w-full text-red-300 text-sm hidden flex items-center gap-1.5 mt-1">
+          <i class="ph ph-warning"></i>
+          <span id="error-text">City not found. Please try again.</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div id="weather-content" class="flex flex-col gap-8 opacity-0 transition-opacity duration-500 hidden">
+      <!-- Current Weather Section -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Main Weather Card -->
+        <div class="md:col-span-2 bg-slate-800/30 rounded-2xl p-6 border border-glass-border flex flex-col sm:flex-row justify-between items-center sm:items-start relative group hover:bg-slate-800/40 transition-colors">
+          <div class="flex flex-col items-center sm:items-start z-10">
+            <div class="flex items-center gap-2 mb-1">
+              <h2 id="location-name" class="text-3xl font-bold tracking-tight">London, UK</h2>
+              <i class="ph-fill ph-navigation-arrow text-blue-400" id="current-location-icon" class="hidden"></i>
+            </div>
+            <p id="current-date" class="text-slate-300 text-sm mb-6">Monday, 12 Oct 2026</p>
+            
+            <div class="flex items-start">
+              <span id="current-temp" class="text-7xl font-bold flex items-start">
+                22
+              </span>
+              <div class="flex flex-col ml-1 mt-2">
+                <div class="flex bg-slate-700/50 rounded-lg p-1">
+                  <button id="unit-c" class="px-2 py-0.5 rounded text-sm font-bold bg-blue-500 text-white transition-colors">&deg;C</button>
+                  <button id="unit-f" class="px-2 py-0.5 rounded text-sm font-semibold text-slate-400 hover:text-white transition-colors">&deg;F</button>
+                </div>
+              </div>
+            </div>
+            <p id="current-condition" class="text-xl mt-4 capitalize font-medium text-slate-200">Partly Cloudy</p>
+          </div>
+          
+          <div class="mt-6 sm:mt-0 flex flex-col items-center z-10">
+            <!-- Large Weather Icon -->
+            <img id="current-icon" src="" alt="Weather icon" class="w-32 h-32 object-contain drop-shadow-2xl filter" />
+          </div>
+        </div>
+
+        <!-- Weather Details Details -->
+        <div class="flex flex-col gap-4">
+          <!-- Humidity Card -->
+          <div class="bg-slate-800/30 rounded-2xl p-5 border border-glass-border flex items-center gap-4 hover:bg-slate-800/40 transition-colors">
+            <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 text-2xl">
+              <i class="ph ph-drop"></i>
+            </div>
+            <div>
+              <p class="text-slate-400 text-sm font-medium">Humidity</p>
+              <p id="current-humidity" class="text-xl font-bold">45%</p>
+            </div>
+          </div>
+          
+          <!-- Wind Card -->
+          <div class="bg-slate-800/30 rounded-2xl p-5 border border-glass-border flex items-center gap-4 hover:bg-slate-800/40 transition-colors">
+             <div class="w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-400 text-2xl">
+              <i class="ph ph-wind"></i>
+            </div>
+            <div>
+              <p class="text-slate-400 text-sm font-medium">Wind Speed</p>
+              <p id="current-wind" class="text-xl font-bold">12 km/h</p>
+            </div>
+          </div>
+          
+          <!-- Feels Like Card -->
+          <div class="bg-slate-800/30 rounded-2xl p-5 border border-glass-border flex items-center gap-4 hover:bg-slate-800/40 transition-colors">
+             <div class="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 text-2xl">
+              <i class="ph ph-thermometer"></i>
+            </div>
+            <div>
+              <p class="text-slate-400 text-sm font-medium">Feels Like</p>
+              <p id="current-feels-like" class="text-xl font-bold">24&deg;</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5-Day Extended Forecast -->
+      <section>
+        <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+          <i class="ph ph-calendar-blank text-blue-400"></i>
+           Extended 5-Day Forecast
+        </h3>
+        <!-- Horizontal scroll on small devices -->
+        <div class="overflow-x-auto pb-4 hide-scrollbar">
+          <div id="forecast-container" class="flex gap-4 min-w-max md:min-w-0 md:grid md:grid-cols-5">
+            <!-- Forecast Cards will be dynamically injected here via JS -->
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading-spinner" class="hidden flex flex-col items-center justify-center py-20 gap-4">
+      <div class="w-12 h-12 border-4 border-slate-600 border-t-blue-500 rounded-full animate-spin"></div>
+      <p class="text-slate-400 animate-pulse">Fetching latest weather data...</p>
+    </div>
+    
+    <!-- Empty / Initial State -->
+    <div id="initial-state" class="flex flex-col items-center justify-center py-20 text-center px-4">
+      <i class="ph ph-cloud-sun text-6xl text-slate-500 mb-4 opacity-70"></i>
+      <h3 class="text-xl font-semibold text-slate-300">Welcome to WeatherFlow</h3>
+      <p class="text-slate-400 max-w-md mt-2 text-sm leading-relaxed">Search for a city or use your current location to get real-time weather conditions and a 5-day extended forecast.</p>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
