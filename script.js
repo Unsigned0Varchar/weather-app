@@ -46,6 +46,7 @@ let isCelsius = true;
 let recentSearches = JSON.parse(localStorage.getItem('weatherFlowRecent')) || [];
 
 // WMO Weather Mapping to Descriptions and OpenWeather Icons
+// This maps standard WMO codes returned by Open-Meteo to our specific UI elements
 const WMO_MAP = {
   0:  { desc: "Clear sky", icon: "01d", bgClass: "bg-clear-day" },
   1:  { desc: "Mainly clear", icon: "02d", bgClass: "bg-clear-day" },
