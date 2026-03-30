@@ -1,0 +1,99 @@
+/* Custom CSS for WeatherFlow App */
+
+/* Custom Scrollbar for horizontal scrolling and dropdowns */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05); 
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2); 
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3); 
+}
+
+/* Hide scrollbar completely but allow scrolling */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glassmorphism specifically for dropdowns and panels */
+.bg-glass {
+  background: rgba(20, 30, 50, 0.5);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Dynamic Weather Backgrounds */
+/* Smooth transition applied in tailwind index.html for min-h-screen */
+
+/* Default / Clear Day */
+.bg-clear-day {
+  background-image: linear-gradient(to bottom right, #3b82f6, #0ea5e9);
+}
+/* Clear Night */
+.bg-clear-night {
+  background-image: linear-gradient(to bottom right, #1e1b4b, #0f172a, #000000);
+}
+/* Clouds */
+.bg-cloudy {
+  background-image: linear-gradient(to bottom right, #64748b, #94a3b8, #cbd5e1);
+  color: #1e293b; /* Darker text for readability on light clouds */
+}
+/* Rain */
+.bg-rainy {
+  background-image: linear-gradient(to bottom right, #334155, #1e293b, #0f172a);
+}
+/* Snow */
+.bg-snowy {
+  background-image: linear-gradient(to bottom right, #e2e8f0, #f8fafc);
+  color: #0f172a;
+}
+/* Thunderstorm */
+.bg-stormy {
+  background-image: linear-gradient(to bottom right, #312e81, #1e1b4b, #09090b);
+}
+/* Fog / Mist */
+.bg-foggy {
+  background-image: linear-gradient(to bottom right, #94a3b8, #cbd5e1, #f1f5f9);
+  color: #1e293b;
+}
+
+/* Weather Icon Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+#current-icon {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Input Focus Ring transition */
+input:focus ~ ul#recent-dropdown, ul#recent-dropdown:hover {
+  display: block;
+}
+
+/* Dropdown list items animation */
+#recent-dropdown li {
+  animation: slideDown 0.2s ease-out forwards;
+  opacity: 0;
+  transform: translateY(-5px);
+}
+@keyframes slideDown {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
