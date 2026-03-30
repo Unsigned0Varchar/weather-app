@@ -161,6 +161,10 @@ async function handleSearch() {
   }
 }
 
+/**
+ * Uses the Browser's HTML5 Geolocation API to find user's coordinates,
+ * then uses Nominatim (OpenStreetMap) to reverse geocode into a City name.
+ */
 async function handleCurrentLocation() {
   if (!navigator.geolocation) {
     showError("Geolocation is not supported by your browser.");
